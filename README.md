@@ -103,9 +103,51 @@ print("\(x.data), \(y.data)") // "42, 42"
 		* 클래스 인스턴스는 참조 카운터를 하나 이상 허용한다.
 
 
+## # Protocol (프로토콜)
 
+* 프로토콜은 메소드, 속성 그리고 다른 특정 작업 또는 기능의 부분에 맞는 요구 사항을 정의 (구현은 하지 않음).
+* 프로토콜은 요구사항의 실제 구현을 제공하기 위한 Class, Struct, Enum에 적용한다.
 
+```
+protocol Sendable {
+	var from: String? { get }
+	var to: String { get }
 
+	func send()
+}
+
+struct Mail: Sendable {
+	var from: String?
+	var to: String
+
+	func send() {
+		print("Send a mail from \(self.from) to \(self.to)")
+	}
+}
+
+struct Feedback: Sendable {
+	var from: String? {
+		return nil // 피드백은 무조건 익명으로 보낸다.
+	}
+
+	var to: String
+
+	func send() {
+		print("Send a feedback to \(self.to)")
+	}
+}
+
+//MARK: 프로토콜은 마치 추상클래스처럼 사용 가능
+func sendAnything(_ sendable: Sendable) {
+	sendable.send()
+}
+
+let mail = Mail(from: "taylored@naver.com", to: "talentx076@gmail.com")
+sendAnything(mail)
+
+let feedback = Feedback(from: talentx076@gmail.com)
+sendAnything(feedback)
+```
 
 
 

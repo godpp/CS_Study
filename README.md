@@ -46,7 +46,14 @@ iOS에서 앱은 간단하게 3 가지 실행 모드와 5 가지의 상태로 �
 * 값의 종류가 일정한 범위로 정해 있을 때 쓰는 것이 편리
 
 ```
-enum 변수명 {
-	case 멤버1, 멤버2 ...
+enum Compass {
+	case North
+	case South
+	case East
+	case West
 }
+
+var directionToSeoul : Compass
+directionToSeoul = Compass.west
+directionToSeoul = .North
 ```

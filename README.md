@@ -150,8 +150,49 @@ sendAnything(feedback)
 ```
 
 
+## # ARC (자동 레퍼런스 카운팅)
 
+* Automatic Reference Counting
+* iOS는 레퍼런스 카운팅을 통해 레퍼런스가 더 이상 사용되지 않는 시점을 결정하여 레퍼런스가 할당받아 사용하던 메모리를 해제할 수 있도록 만든다.
+* 프로퍼티, 상수, 변수에 레퍼런스가 지정될 때 여기에 들어있는 카운트를 증가시키고 프로퍼티, 상수, 변수가 해제되면 카운트를 감소시킨다.
+* 보유한 카운트가 0이 되면 메모리를 해제시킨다.
 
+* 강한 순환 참조 (Strong Reference Cycles)
+	* ARC의 한 가지 단점은 두 개의 객체가 상호 참조하는 경우와 같은 강한 순환 참조가 만들어 질 수 있는 것
+	* 이렇게 되면 이 순환 참조에 연관된 객체들은 레퍼런스 카운트가 0에 도달하지 않게 되고 결국 메모리 누수가 발생하게 된다.
+
+```
+class Parent {
+	var myChild: Child?
+
+	func createChild() -> Child {
+		let child = Child(parent: self)
+		self.myChild = child
+		return child
+	}
+}
+
+class Child {
+	var myParent: Parent
+
+	init(parent: Parent) {
+		self.myParent = parent
+	}
+}
+
+var parent = Parent() // Parent RC = 1
+parent.createChild()  // Parent RC = 2, Child RC = 1
+
+============== 종료 ==============
+// parent 변수 사용 종료
+// 부모 객체는 자식 객체의 프로퍼티로 인하여 1, 자식 객체는 부모 객체의 프로퍼티로 인하여 1
+// Parent RC = 1, Child RC = 1 -> RC가 0이 되지 않으므로 메모리 누수 발생!
+```
+
+* 순환 참조 방지
+	* 약한 참조 (weak)는 대상 객체에 대해 레퍼런스 카운트를 변화시키지 않는다.
+	* 레퍼런스 카운트를 증가 시키지 않으면서 대상 객체를 참조할 수 있다는 뜻
+	* 위의 예에서 Child의 myParent 프로퍼티를 weak로 선언하게 되면 순환 참조가 발생하지 않음 (weak var myParent: Parent)
 
 
 
